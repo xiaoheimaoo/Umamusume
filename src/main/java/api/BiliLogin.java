@@ -834,15 +834,14 @@ public class BiliLogin {
                 }
             }
             Connection conn2 = getConnection();
-            String sql2 = "update `order` set `fcoin`=?,`coin`=?,`gacha`=?,`exchange`=?,`message`='初始化游戏数据' where `order`=? and `status`=1";
+            String sql2 = "update `order` set `fcoin`=?,`gacha`=?,`exchange`=?,`message`='初始化游戏数据' where `order`=? and `status`=1";
             PreparedStatement ps2 = null;
             try {
                 ps2 = conn2.prepareStatement(sql2);
                 ps2.setString(1, fcoin);
-                ps2.setString(2, coin);
-                ps2.setString(3, gacha);
-                ps2.setString(4, exchange);
-                ps2.setString(5, userInfo.getOrder());
+                ps2.setString(2, gacha);
+                ps2.setString(3, exchange);
+                ps2.setString(4, userInfo.getOrder());
                 ps2.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
