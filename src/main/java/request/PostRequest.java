@@ -53,7 +53,7 @@ public class PostRequest {
         proxy = new HttpHost("127.0.0.1", 8888);
         DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
         CloseableHttpClient httpClientBuilder = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore())
-                .setRoutePlanner(routePlanner)
+                //.setRoutePlanner(routePlanner)
                 .build();
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("Host", "le1-prod-bili-gs-uma.bilibiligame.net");

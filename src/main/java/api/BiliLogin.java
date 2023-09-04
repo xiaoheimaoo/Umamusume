@@ -837,16 +837,26 @@ public class BiliLogin {
                     throwables.printStackTrace();
                 }
             }
-            if(jsonObject.getJSONObject("data").getJSONArray("card_list").size() == 0){
-                User user = new User();
-                user.change_name(userInfo);
-                user.change_sex(userInfo);
-                new Tutorial().skip(userInfo);
-                loadIndex(userInfo);
-                Present present = new Present();
-                present.index(userInfo);
-                present.receive_all(userInfo);
+        } else if(jsonObject.getIntValue("response_code") == 1 && jsonObject.getJSONObject("data").getJSONObject("user_info").getInteger("tutorial_step") < 1000){
+            Connection conn2 = getConnection();
+            String sql2 = "update `order` set status=3,message=? where `order`=? and status=1";
+            PreparedStatement ps2 = null;
+            try {
+                ps2 = conn2.prepareStatement(sql2);
+                ps2.setString(1, "新手教程未完成");
+                ps2.setString(2, userInfo.getOrder());
+                ps2.executeUpdate();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            } finally {
+                try {
+                    conn2.close();
+                    ps2.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
+            Thread.currentThread().stop();
         } else {
             Connection conn2 = getConnection();
             String sql2 = "update `order` set status=3,message=? where `order`=? and status=1";
