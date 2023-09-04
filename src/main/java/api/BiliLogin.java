@@ -1,5 +1,6 @@
 package api;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import crypt.*;
@@ -822,12 +823,20 @@ public class BiliLogin {
         if (jsonObject.getIntValue("response_code") == 1) {
             userInfo.setSid(MD5.getSID(jsonObject.getJSONObject("data_headers").getString("sid")));
             String fcoin = "0";
-            if(jsonObject.getJSONObject("data").getJSONObject("coin_info").containsKey("fcoin")){
-                fcoin = jsonObject.getJSONObject("data").getJSONObject("coin_info").getString("fcoin");
-            }
-            String coin = "0";
-            if(jsonObject.getJSONObject("data").getJSONObject("coin_info").containsKey("coin")){
-                fcoin = jsonObject.getJSONObject("data").getJSONObject("coin_info").getString("coin");
+            if(jsonObject.getJSONObject("data").containsKey("coin_info")){
+                Object parsedObject = JSON.parse(jsonObject.getJSONObject("data").getString("coin_info"));
+                if (parsedObject instanceof JSONObject) {
+                    JSONObject js = (JSONObject) parsedObject;
+                    if(js.containsKey("fcoin")){
+                        fcoin = js.getString("fcoin");
+                    }
+                    String coin = "0";
+                    if(js.containsKey("coin")){
+                        fcoin = js.getString("coin");
+                    }
+                }else{
+                    userInfo.setIs_new_user(1);
+                }
             }
             String gacha = "0";
             String exchange = "0";
@@ -861,26 +870,6 @@ public class BiliLogin {
                     throwables.printStackTrace();
                 }
             }
-        } else if(jsonObject.getIntValue("response_code") == 1 && jsonObject.getJSONObject("data").getJSONObject("user_info").getInteger("tutorial_step") < 1000){
-            Connection conn2 = getConnection();
-            String sql2 = "update `order` set status=3,message=? where `order`=? and status=1";
-            PreparedStatement ps2 = null;
-            try {
-                ps2 = conn2.prepareStatement(sql2);
-                ps2.setString(1, "新手教程未完成");
-                ps2.setString(2, userInfo.getOrder());
-                ps2.executeUpdate();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } finally {
-                try {
-                    conn2.close();
-                    ps2.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-            }
-            Thread.currentThread().stop();
         } else {
             Connection conn2 = getConnection();
             String sql2 = "update `order` set status=3,message=? where `order`=? and status=1";
