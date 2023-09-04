@@ -19,6 +19,8 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.UUID;
 
+import static umamusume.Main.appVer;
+
 
 public class PostRequest {
 
@@ -57,7 +59,7 @@ public class PostRequest {
                 .build();
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("Host", "le1-prod-bili-gs-uma.bilibiligame.net");
-        httpPost.addHeader("APP-VER", "1.9.7");
+        httpPost.addHeader("APP-VER", appVer);
         httpPost.addHeader("X-Unity-Version", "2020.3.48f1");
         httpPost.addHeader("Accept", "*/*");
         httpPost.addHeader("BUMA-OPEN-ID", userInfo.getBUMA_OPEN_ID());

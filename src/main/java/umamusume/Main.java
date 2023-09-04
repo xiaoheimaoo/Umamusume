@@ -20,7 +20,7 @@ import static utils.Hikari.getConnection;
 
 
 public class Main{
-    public static String appVer = "2.26.0";
+    public static String appVer = "1.9.7";
     private static Main main;
     private boolean running;
     private final ThreadPoolExecutor executor;
@@ -45,7 +45,7 @@ public class Main{
             try {
                 file.createNewFile();
                 writer = new FileWriter(file, false);
-                writer.append("#同时执行线程数\nthreads=300\n#数据库连接地址\nurl=localhost\n#数据库端口\nport=3306\n#库名\ndatabase=\n#数据库用户名\nuser=root\n#数据库密码\npassword=\n#打码平台秘钥\nsecretkey=\n#游戏版本号\nappVer=2.17.3\n");
+                writer.append("#同时执行线程数\nthreads=300\n#数据库连接地址\nurl=localhost\n#数据库端口\nport=3306\n#库名\ndatabase=\n#数据库用户名\nuser=root\n#数据库密码\npassword=\n#打码平台秘钥\nsecretkey=\n#游戏版本号\nappVer=1.9.7\n");
                 writer.flush();
                 writer.close();
             } catch (IOException e) {
