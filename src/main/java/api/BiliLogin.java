@@ -823,8 +823,8 @@ public class BiliLogin {
             userInfo.setSid(MD5.getSID(jsonObject.getJSONObject("data_headers").getString("sid")));
             String fcoin = jsonObject.getJSONObject("data").getJSONObject("coin_info").getString("fcoin");
             String coin = jsonObject.getJSONObject("data").getJSONObject("coin_info").getString("coin");
-            String gacha = null;
-            String exchange = null;
+            String gacha = "0";
+            String exchange = "0";
             JSONArray item_list = jsonObject.getJSONObject("data").getJSONArray("item_list");
             for(int i=0; i< item_list.size(); i++){
                 if(item_list.getJSONObject(i).getString("item_id").equals("114")){
