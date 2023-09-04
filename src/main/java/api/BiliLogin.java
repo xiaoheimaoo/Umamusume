@@ -821,16 +821,24 @@ public class BiliLogin {
         JSONObject jsonObject = MsgPackResponse.decrypt(userInfo,result);
         if (jsonObject.getIntValue("response_code") == 1) {
             userInfo.setSid(MD5.getSID(jsonObject.getJSONObject("data_headers").getString("sid")));
-            String fcoin = jsonObject.getJSONObject("data").getJSONObject("coin_info").getString("fcoin");
-            String coin = jsonObject.getJSONObject("data").getJSONObject("coin_info").getString("coin");
+            String fcoin = "0";
+            if(jsonObject.getJSONObject("data").getJSONObject("coin_info").containsKey("fcoin")){
+                fcoin = jsonObject.getJSONObject("data").getJSONObject("coin_info").getString("fcoin");
+            }
+            String coin = "0";
+            if(jsonObject.getJSONObject("data").getJSONObject("coin_info").containsKey("coin")){
+                fcoin = jsonObject.getJSONObject("data").getJSONObject("coin_info").getString("coin");
+            }
             String gacha = "0";
             String exchange = "0";
-            JSONArray item_list = jsonObject.getJSONObject("data").getJSONArray("item_list");
-            for(int i=0; i< item_list.size(); i++){
-                if(item_list.getJSONObject(i).getString("item_id").equals("114")){
-                    gacha = item_list.getJSONObject(i).getString("number");
-                }else if(item_list.getJSONObject(i).getString("item_id").equals("130")){
-                    exchange = item_list.getJSONObject(i).getString("number");
+            if(jsonObject.getJSONObject("data").containsKey("item_list")){
+                JSONArray item_list = jsonObject.getJSONObject("data").getJSONArray("item_list");
+                for(int i=0; i< item_list.size(); i++){
+                    if(item_list.getJSONObject(i).getString("item_id").equals("114")){
+                        gacha = item_list.getJSONObject(i).getString("number");
+                    }else if(item_list.getJSONObject(i).getString("item_id").equals("130")){
+                        exchange = item_list.getJSONObject(i).getString("number");
+                    }
                 }
             }
             Connection conn2 = getConnection();
