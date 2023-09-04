@@ -1,5 +1,6 @@
 package api;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import crypt.*;
 import entity.UserInfo;
@@ -820,12 +821,28 @@ public class BiliLogin {
         JSONObject jsonObject = MsgPackResponse.decrypt(userInfo,result);
         if (jsonObject.getIntValue("response_code") == 1) {
             userInfo.setSid(MD5.getSID(jsonObject.getJSONObject("data_headers").getString("sid")));
+            String fcoin = jsonObject.getJSONObject("data").getJSONObject("coin_info").getString("fcoin");
+            String coin = jsonObject.getJSONObject("data").getJSONObject("coin_info").getString("coin");
+            String gacha = null;
+            String exchange = null;
+            JSONArray item_list = jsonObject.getJSONObject("data").getJSONArray("item_list");
+            for(int i=0; i< item_list.size(); i++){
+                if(item_list.getJSONObject(i).getString("item_id").equals("114")){
+                    gacha = item_list.getJSONObject(i).getString("number");
+                }else if(item_list.getJSONObject(i).getString("item_id").equals("130")){
+                    exchange = item_list.getJSONObject(i).getString("number");
+                }
+            }
             Connection conn2 = getConnection();
-            String sql2 = "update `order` set `message`='初始化游戏数据' where `order`=? and `status`=1";
+            String sql2 = "update `order` set `fcoin`=?,`coin`=?,`gacha`=?,`exchange`=?,`message`='初始化游戏数据' where `order`=? and `status`=1";
             PreparedStatement ps2 = null;
             try {
                 ps2 = conn2.prepareStatement(sql2);
-                ps2.setString(1, userInfo.getOrder());
+                ps2.setString(1, fcoin);
+                ps2.setString(2, coin);
+                ps2.setString(3, gacha);
+                ps2.setString(4, exchange);
+                ps2.setString(5, userInfo.getOrder());
                 ps2.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
