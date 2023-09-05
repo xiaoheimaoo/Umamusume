@@ -42,10 +42,10 @@ public class BiliLogin {
             user.change_sex(userInfo);
             new Tutorial().skip(userInfo);
             loadIndex(userInfo);
-            Present present = new Present();
-            present.index(userInfo);
-            present.receive_all(userInfo);
         }
+        Present present = new Present();
+        present.index(userInfo);
+        present.receive_all(userInfo);
     }
     public String getCipher(UserInfo userInfo) {
         String result;
